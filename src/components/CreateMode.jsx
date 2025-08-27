@@ -1,109 +1,314 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 
-// Enhanced emotion detection with keyword analysis
+// Expanded emotion keywords with more comprehensive detection
 const emotionKeywords = {
   happy: {
-    words: ['love', 'awesome', 'amazing', 'great', 'fantastic', 'wonderful', 'excited', 'thrilled', 'delighted', 'joyful', 'cheerful', 'glad', 'pleased', 'ecstatic', 'overjoyed'],
+    words: [
+      // Direct happiness
+      'happy', 'joy', 'joyful', 'cheerful', 'glad', 'pleased', 'delighted', 'thrilled', 'excited', 'ecstatic', 'overjoyed', 'elated',
+      // Positive actions/feelings
+      'love', 'awesome', 'amazing', 'great', 'fantastic', 'wonderful', 'brilliant', 'perfect', 'excellent', 'incredible', 'marvelous',
+      // Positive expressions
+      'smile', 'laugh', 'giggle', 'celebrate', 'party', 'win', 'success', 'victory', 'achieve', 'accomplish', 'proud',
+      // Colloquial happiness
+      'yay', 'hooray', 'woohoo', 'yes', 'sweet', 'cool', 'nice', 'good', 'best', 'favorite', 'enjoy', 'fun'
+    ],
+    intensifiers: ['very', 'so', 'extremely', 'super', 'really', 'absolutely', 'totally'],
     color: 'text-green-600',
     bgColor: 'bg-green-100',
     borderColor: 'border-green-400'
   },
   sad: {
-    words: ['sad', 'upset', 'disappointed', 'heartbroken', 'depressed', 'miserable', 'down', 'blue', 'gloomy', 'unhappy', 'sorrowful', 'melancholy', 'devastated'],
+    words: [
+      // Direct sadness
+      'sad', 'unhappy', 'depressed', 'miserable', 'gloomy', 'down', 'blue', 'melancholy', 'sorrowful', 'heartbroken', 'devastated',
+      // Disappointment
+      'disappointed', 'upset', 'let down', 'discouraged', 'dismayed', 'crushed', 'defeated', 'hopeless',
+      // Loss/grief
+      'cry', 'tears', 'weep', 'sob', 'mourn', 'grieve', 'miss', 'lost', 'gone', 'left', 'alone', 'lonely',
+      // Negative situations
+      'failed', 'fail', 'broke', 'broken', 'hurt', 'pain', 'ache', 'suffer', 'struggle', 'difficult', 'hard', 'tough'
+    ],
+    intensifiers: ['very', 'so', 'extremely', 'really', 'deeply', 'completely'],
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
     borderColor: 'border-blue-400'
   },
   angry: {
-    words: ['angry', 'mad', 'furious', 'rage', 'hate', 'annoyed', 'irritated', 'frustrated', 'outraged', 'livid', 'fuming', 'enraged', 'irate'],
+    words: [
+      // Direct anger
+      'angry', 'mad', 'furious', 'rage', 'enraged', 'livid', 'fuming', 'irate', 'outraged', 'incensed',
+      // Irritation
+      'annoyed', 'irritated', 'frustrated', 'aggravated', 'bothered', 'irked', 'vexed', 'pissed',
+      // Hate/dislike
+      'hate', 'despise', 'loathe', 'detest', 'can\'t stand', 'disgusted', 'sick of', 'fed up',
+      // Aggressive actions
+      'fight', 'argue', 'yell', 'shout', 'scream', 'storm', 'slam', 'punch', 'hit', 'attack',
+      // Unfairness
+      'unfair', 'wrong', 'stupid', 'ridiculous', 'absurd', 'outrageous', 'unacceptable'
+    ],
+    intensifiers: ['very', 'so', 'extremely', 'really', 'absolutely', 'completely'],
     color: 'text-red-600',
     bgColor: 'bg-red-100',
     borderColor: 'border-red-400'
   },
   fear: {
-    words: ['scared', 'afraid', 'terrified', 'frightened', 'nervous', 'anxious', 'worried', 'panicked', 'horrified', 'petrified', 'alarmed', 'apprehensive'],
+    words: [
+      // Direct fear
+      'scared', 'afraid', 'frightened', 'terrified', 'petrified', 'horrified', 'panicked', 'fearful',
+      // Anxiety/worry
+      'nervous', 'anxious', 'worried', 'concerned', 'apprehensive', 'uneasy', 'tense', 'stressed',
+      // Scary things
+      'creepy', 'spooky', 'eerie', 'haunted', 'ghost', 'monster', 'dark', 'shadow', 'nightmare',
+      // Physical reactions
+      'shake', 'shaking', 'tremble', 'trembling', 'sweat', 'heart racing', 'jump', 'startled',
+      // Danger
+      'dangerous', 'threat', 'risk', 'unsafe', 'warning', 'alarm', 'emergency', 'help'
+    ],
+    intensifiers: ['very', 'so', 'extremely', 'really', 'absolutely', 'completely'],
     color: 'text-purple-600',
     bgColor: 'bg-purple-100',
     borderColor: 'border-purple-400'
   },
   surprise: {
-    words: ['surprised', 'shocked', 'amazed', 'astonished', 'stunned', 'bewildered', 'startled', 'unexpected', 'sudden', 'wow', 'whoa', 'unbelievable'],
+    words: [
+      // Direct surprise
+      'surprised', 'shocked', 'amazed', 'astonished', 'astounded', 'stunned', 'bewildered', 'dumbfounded',
+      // Unexpected
+      'unexpected', 'sudden', 'suddenly', 'all of a sudden', 'out of nowhere', 'didn\'t see coming', 'caught off guard',
+      // Expressions
+      'wow', 'whoa', 'oh my', 'no way', 'really', 'seriously', 'unbelievable', 'incredible', 'can\'t believe',
+      // Discovery
+      'found', 'discovered', 'revealed', 'appeared', 'showed up', 'turned out', 'realized', 'noticed'
+    ],
+    intensifiers: ['very', 'so', 'extremely', 'really', 'absolutely', 'completely'],
     color: 'text-orange-600',
     bgColor: 'bg-orange-100',
     borderColor: 'border-orange-400'
   }
 };
 
+// Enhanced emotion detection with better algorithms
 const detectEmotion = (text) => {
   const lowerText = text.toLowerCase();
+  const words = lowerText.split(/\s+/);
+  
+  // Advanced negation detection
+  const negationWords = ['not', 'never', 'no', "don't", "won't", "can't", "isn't", "aren't", "wasn't", "weren't", "haven't", "hasn't", "wouldn't", "shouldn't", "couldn't"];
+  const negationPattern = new RegExp(`\\b(${negationWords.join('|')})\\b`, 'gi');
+  const negationMatches = lowerText.match(negationPattern);
+  
   const results = {};
   let totalMatches = 0;
+  let maxScore = 0;
+  let dominantEmotion = 'neutral';
   
-  // Check for negation
-  const negationWords = ['not', 'never', 'no', "don't", "won't", "can't", "isn't", "aren't", "wasn't", "weren't"];
-  const hasNegation = negationWords.some(word => lowerText.includes(word));
-  
-  // Count matches for each emotion
+  // Enhanced scoring system
   Object.entries(emotionKeywords).forEach(([emotion, data]) => {
-    const matches = data.words.filter(word => lowerText.includes(word));
+    let score = 0;
+    let matches = [];
+    
+    // Check main keywords
+    data.words.forEach(word => {
+      const regex = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'gi');
+      const wordMatches = lowerText.match(regex);
+      if (wordMatches) {
+        matches.push(...wordMatches);
+        score += wordMatches.length;
+      }
+    });
+    
+    // Check for intensifiers near emotion words
     if (matches.length > 0) {
+      data.intensifiers.forEach(intensifier => {
+        const intensifierRegex = new RegExp(`\\b${intensifier}\\s+\\w*\\s*(${data.words.join('|')})`, 'gi');
+        if (intensifierRegex.test(lowerText)) {
+          score += 0.5; // Bonus for intensified emotions
+        }
+      });
+    }
+    
+    if (score > 0) {
       results[emotion] = {
-        matches,
-        count: matches.length,
-        confidence: matches.length / data.words.length
+        matches: [...new Set(matches)], // Remove duplicates
+        score,
+        confidence: Math.min(score / 3, 1) // Normalize confidence
       };
-      totalMatches += matches.length;
+      totalMatches += score;
+      
+      if (score > maxScore) {
+        maxScore = score;
+        dominantEmotion = emotion;
+      }
     }
   });
   
-  // Handle negation logic
-  if (hasNegation && Object.keys(results).length > 0) {
-    const primaryEmotion = Object.entries(results).sort(([,a], [,b]) => b.count - a.count)[0][0];
-    if (primaryEmotion === 'fear' || primaryEmotion === 'sad') {
+  // Handle complex negation scenarios
+  if (negationMatches && negationMatches.length > 0 && totalMatches > 0) {
+    const negationLogic = handleNegation(dominantEmotion, lowerText, results);
+    if (negationLogic.flipped) {
       return {
-        emotion: 'happy',
-        confidence: 0.8,
-        explanation: `The word "not" flipped the emotion from ${primaryEmotion} to happiness (relief)!`,
-        keywords: results[primaryEmotion].matches,
-        hasNegation: true
+        emotion: negationLogic.newEmotion,
+        confidence: Math.min(negationLogic.confidence, 0.9),
+        explanation: negationLogic.explanation,
+        keywords: results[dominantEmotion]?.matches || [],
+        hasNegation: true,
+        originalEmotion: dominantEmotion
       };
     }
   }
   
+  // No clear emotion detected
   if (totalMatches === 0) {
+    // Try to detect subtle emotional cues
+    const subtleEmotion = detectSubtleEmotions(lowerText);
+    if (subtleEmotion.emotion !== 'neutral') {
+      return subtleEmotion;
+    }
+    
     return {
       emotion: 'neutral',
       confidence: 0,
-      explanation: 'No clear emotion detected. Try adding words that show feelings!',
+      explanation: 'No clear emotion detected. Try adding more descriptive feeling words like "happy", "sad", "angry", "scared", or "surprised"!',
       keywords: [],
+      hasNegation: false,
+      suggestions: getSuggestions(lowerText)
+    };
+  }
+  
+  return {
+    emotion: dominantEmotion,
+    confidence: Math.min(results[dominantEmotion].confidence + 0.2, 1),
+    explanation: generateExplanation(dominantEmotion, results[dominantEmotion].matches, false),
+    keywords: results[dominantEmotion].matches,
+    hasNegation: false
+  };
+};
+
+// Handle negation logic
+const handleNegation = (emotion, text, results) => {
+  const negationRules = {
+    fear: { flipsTo: 'happy', reason: 'relief' },
+    sad: { flipsTo: 'happy', reason: 'relief' },
+    angry: { flipsTo: 'happy', reason: 'relief' },
+    happy: { flipsTo: 'sad', reason: 'disappointment' },
+    surprise: { flipsTo: 'neutral', reason: 'expectation' }
+  };
+  
+  const rule = negationRules[emotion];
+  if (!rule) return { flipped: false };
+  
+  return {
+    flipped: true,
+    newEmotion: rule.flipsTo,
+    confidence: 0.8,
+    explanation: `The word "not" flipped the emotion from ${emotion} to ${rule.flipsTo} (${rule.reason})! Negation words can completely change the meaning.`
+  };
+};
+
+// Detect subtle emotional cues
+const detectSubtleEmotions = (text) => {
+  // Punctuation-based detection
+  if (text.includes('!!!') || text.includes('!!!!')) {
+    if (text.includes('?')) {
+      return {
+        emotion: 'surprise',
+        confidence: 0.6,
+        explanation: 'Multiple exclamation marks with questions often show surprise or confusion!',
+        keywords: ['!!!', '?'],
+        hasNegation: false
+      };
+    }
+    return {
+      emotion: 'happy',
+      confidence: 0.7,
+      explanation: 'Multiple exclamation marks usually show excitement or strong positive emotion!',
+      keywords: ['!!!'],
       hasNegation: false
     };
   }
   
-  // Find dominant emotion
-  const dominant = Object.entries(results).sort(([,a], [,b]) => b.count - a.count)[0];
-  const [emotion, data] = dominant;
+  // Question-based surprise detection
+  if (text.match(/what\?|how\?|why\?|really\?|seriously\?/)) {
+    return {
+      emotion: 'surprise',
+      confidence: 0.6,
+      explanation: 'Questions with surprise words like "what?" or "really?" often show amazement!',
+      keywords: text.match(/what\?|how\?|why\?|really\?|seriously\?/) || [],
+      hasNegation: false
+    };
+  }
   
-  return {
-    emotion,
-    confidence: Math.min(data.confidence * 2 + 0.3, 1),
-    explanation: generateExplanation(emotion, data.matches, hasNegation),
-    keywords: data.matches,
-    hasNegation
+  // Contextual detection
+  const contexts = {
+    birthday: 'happy',
+    party: 'happy',
+    vacation: 'happy',
+    test: 'fear',
+    exam: 'fear',
+    homework: 'sad',
+    hospital: 'fear',
+    doctor: 'fear',
+    dentist: 'fear',
+    thunder: 'fear',
+    lightning: 'fear',
+    spider: 'fear',
+    snake: 'fear'
   };
+  
+  for (const [context, emotion] of Object.entries(contexts)) {
+    if (text.includes(context)) {
+      return {
+        emotion,
+        confidence: 0.5,
+        explanation: `The word "${context}" often relates to ${emotion} emotions. Context clues help detect feelings!`,
+        keywords: [context],
+        hasNegation: false,
+        isContextual: true
+      };
+    }
+  }
+  
+  return { emotion: 'neutral', confidence: 0 };
 };
 
+// Generate suggestions for improvement
+const getSuggestions = (text) => {
+  const suggestions = [];
+  
+  if (text.length < 10) {
+    suggestions.push("Try writing a longer sentence with more details!");
+  }
+  
+  if (!text.match(/[.!?]/)) {
+    suggestions.push("Add some punctuation like ! or ? to show emotion!");
+  }
+  
+  suggestions.push("Try words like: excited, disappointed, frustrated, amazed, or worried");
+  
+  return suggestions;
+};
+
+// Enhanced explanation generator
 const generateExplanation = (emotion, keywords, hasNegation) => {
+  const keywordList = keywords.slice(0, 3).join('", "'); // Limit to 3 keywords
+  
   const explanations = {
-    happy: `I detected happiness from words like "${keywords.join('", "')}"! These words show positive feelings.`,
-    sad: `I found sadness in words like "${keywords.join('", "')}"! These words express disappointment or sorrow.`,
-    angry: `I sensed anger from words like "${keywords.join('", "')}"! These words show frustration or rage.`,
-    fear: `I detected fear in words like "${keywords.join('", "')}"! These words express worry or being scared.`,
-    surprise: `I found surprise from words like "${keywords.join('", "')}"! These words show unexpected feelings.`
+    happy: `I detected happiness from words like "${keywordList}"! These words express joy, excitement, or positive feelings.`,
+    sad: `I found sadness in words like "${keywordList}"! These words show disappointment, sorrow, or negative feelings.`,
+    angry: `I sensed anger from words like "${keywordList}"! These words express frustration, rage, or being upset.`,
+    fear: `I detected fear in words like "${keywordList}"! These words show worry, anxiety, or being scared.`,
+    surprise: `I found surprise from words like "${keywordList}"! These words show unexpected events or amazement.`
   };
   
-  return explanations[emotion] || 'Interesting sentence! Keep experimenting with emotion words.';
+  let explanation = explanations[emotion] || 'Interesting sentence! Keep experimenting with emotion words.';
+  
+  if (keywords.length > 3) {
+    explanation += ` I also found other emotion words that strengthen this feeling!`;
+  }
+  
+  return explanation;
 };
 
 const CreateMode = ({ onBack }) => {
@@ -175,12 +380,27 @@ const CreateMode = ({ onBack }) => {
   };
 
   const samplePrompts = [
-    "I can't believe I won the lottery!",
-    "My best friend is moving to another country...",
-    "That spider in my room terrified me!",
-    "I'm so mad that someone ate my lunch!",
-    "I love spending time with my family."
-  ];
+  // Clear emotions
+  "I can't believe I won the lottery!",
+  "My best friend is moving to another country and I'm heartbroken.",
+  "That huge spider in my room absolutely terrified me!",
+  "I'm so frustrated that someone ate my lunch again!",
+  "I love spending cozy evenings with my family.",
+  
+  // Subtle emotions  
+  "The test results come out tomorrow...",
+  "My birthday party is next week!!!",
+  "What? You're telling me school is canceled?",
+  "I'm not worried about the presentation anymore.",
+  "The thunder is so loud outside right now.",
+  
+  // Complex scenarios
+  "I failed my driving test but I'll try again next month.",
+  "Wow, I never expected to see you here!",
+  "I'm not afraid of the dark like I used to be.",
+  "This homework is absolutely impossible to finish.",
+  "My dog has been missing for three days now."
+];
 
   return (
     <div className="min-h-screen gradient-bg flex flex-col p-4 sm:p-6 relative overflow-hidden">

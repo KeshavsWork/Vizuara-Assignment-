@@ -136,7 +136,7 @@ return () => timers.forEach(t => clearTimeout(t));
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              Help Tom & Jerry understand feelings!
+              Help Tom understand feelings!
             </motion.p>
           </motion.div>
         )}
