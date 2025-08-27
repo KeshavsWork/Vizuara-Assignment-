@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@layer base {
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+}
+
+@layer components {
+  .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .chat-bubble {
+    position: relative;
+  }
+  
+  .chat-bubble::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  
+  .tom-bubble::before {
+    left: -10px;
+    top: 20px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid white;
+  }
+  
+  .jerry-bubble::before {
+    right: -10px;
+    top: 20px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid white;
+  }
+}
