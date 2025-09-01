@@ -16,7 +16,7 @@ const tutorialConversation = [
     speaker: "tom", 
     text: "Emotions? Like when I'm SUPER excited? 😊",
     emotion: "happy",
-    delay: 1500
+    delay: 2000
   },
   {
     id: 3,
@@ -24,14 +24,14 @@ const tutorialConversation = [
     text: "Exactly! That's HAPPY. Words like 'love' and 'awesome' show happiness.",
     emotion: "happy",
     keywords: ["love", "awesome"],
-    delay: 3000
+    delay: 3500
   },
   {
     id: 4,
     speaker: "tom",
     text: "What about when I'm MAD at that mouse? 😡",
     emotion: "angry", 
-    delay: 4500
+    delay: 5000
   },
   {
     id: 5,
@@ -39,14 +39,14 @@ const tutorialConversation = [
     text: "That's ANGRY! Words like 'hate' and 'furious' show anger.",
     emotion: "angry",
     keywords: ["hate", "furious"],
-    delay: 6000
+    delay: 6500
   },
   {
     id: 6,
     speaker: "tom",
     text: "Sometimes I feel down when I lose... 😢",
     emotion: "sad",
-    delay: 7500
+    delay: 8000
   },
   {
     id: 7,
@@ -54,14 +54,14 @@ const tutorialConversation = [
     text: "That's SAD. Words like 'upset' and 'disappointed' show sadness.",
     emotion: "sad",
     keywords: ["upset", "disappointed"],
-    delay: 9000
+    delay: 9500
   },
   {
     id: 8,
     speaker: "tom",
     text: "And when loud noises startle me? 😨",
     emotion: "fear",
-    delay: 10500
+    delay: 11000
   },
   {
     id: 9,
@@ -69,14 +69,14 @@ const tutorialConversation = [
     text: "That's FEAR! Words like 'scared' and 'afraid' show fear.",
     emotion: "fear", 
     keywords: ["scared", "afraid"],
-    delay: 12000
+    delay: 12500
   },
   {
     id: 10,
     speaker: "tom",
     text: "OH WOW! I didn't expect that! 😲",
     emotion: "surprise",
-    delay: 13500
+    delay: 14000
   },
   {
     id: 11,
@@ -84,7 +84,7 @@ const tutorialConversation = [
     text: "Perfect example of SURPRISE! Words like 'shocked' and 'unexpected'.",
     emotion: "surprise",
     keywords: ["shocked", "unexpected"], 
-    delay: 15000
+    delay: 16000
   }
 ];
 

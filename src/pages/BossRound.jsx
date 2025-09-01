@@ -149,7 +149,7 @@ const BossRound = ({ onComplete, onBack }) => {
         });
       }
       advanceTimerRef.current = null;
-    }, 4000); // Slightly longer for harder questions
+    }, 6000); // Slightly longer for harder questions
   };
 
   const handleNext = () => {

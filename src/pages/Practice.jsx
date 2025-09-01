@@ -203,7 +203,7 @@ const Practice = ({ onComplete, onBack }) => {
     setAnswers(prev => [...prev, newAnswer]);
     setShowFeedback(true);
 
-    // Auto-advance after 3 seconds
+    // Auto-advance after 5 seconds
     advanceTimerRef.current = setTimeout(() => {
       const nextIndex = currentQuestion + 1;
       if (nextIndex < total) {
@@ -222,7 +222,7 @@ const Practice = ({ onComplete, onBack }) => {
         });
       }
       advanceTimerRef.current = null;
-    }, 3000);
+    }, 5000);
   };
 
   function handleNext() {

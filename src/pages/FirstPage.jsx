@@ -66,11 +66,11 @@ if (idx === welcomeConversation.length - 1) {
       timers.push(setTimeout(() => {
         setShowButton(true);
         setAnimationComplete(true);
-      }, 2000));
+      }, 3000));
     }
   }, msg.delay));
 });
-}, 2000));
+}, 3000));
 
 
 return () => timers.forEach(t => clearTimeout(t));
